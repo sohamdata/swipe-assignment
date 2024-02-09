@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
+import { BiArrowBack } from "react-icons/bi";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useInvoiceListData, useProductListData } from "../redux/hooks";
+import { addInvoice, updateInvoice } from "../redux/slices/invoicesSlice";
+import generateRandomId from "../utils/generateRandomId";
 import InvoiceItem from "./InvoiceItem";
 import InvoiceModal from "./InvoiceModal";
-import { BiArrowBack } from "react-icons/bi";
-import InputGroup from "react-bootstrap/InputGroup";
-import { useDispatch } from "react-redux";
-import { addInvoice, updateInvoice } from "../redux/slices/invoicesSlice";
-import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
-import generateRandomId from "../utils/generateRandomId";
-import { useInvoiceListData } from "../redux/hooks";
 
 const InvoiceForm = () => {
   const dispatch = useDispatch();
@@ -26,6 +26,8 @@ const InvoiceForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [copyId, setCopyId] = useState("");
   const { getOneInvoice, listSize } = useInvoiceListData();
+  const { getOneProduct, productList } = useProductListData();
+
   const [formData, setFormData] = useState(
     isEdit
       ? getOneInvoice(params.id)
@@ -61,6 +63,7 @@ const InvoiceForm = () => {
               itemDescription: "",
               itemPrice: "1.00",
               itemQuantity: 1,
+              itemCategory: "",
             },
           ],
         }
@@ -71,9 +74,7 @@ const InvoiceForm = () => {
   }, []);
 
   const handleRowDel = (itemToDelete) => {
-    const updatedItems = formData.items.filter(
-      (item) => item.itemId !== itemToDelete.itemId
-    );
+    const updatedItems = formData.items.filter((item) => item.itemId !== itemToDelete.itemId);
     setFormData({ ...formData, items: updatedItems });
     handleCalculateTotal();
   };
@@ -99,8 +100,12 @@ const InvoiceForm = () => {
       let subTotal = 0;
 
       prevFormData.items.forEach((item) => {
-        subTotal +=
-          parseFloat(item.itemPrice).toFixed(2) * parseInt(item.itemQuantity);
+        let price = item.itemPrice;
+        if (!price) {
+          const prod = getOneProduct(item.itemId);
+          price = prod.price
+        }
+        subTotal += parseFloat(price || 0).toFixed(2) * parseInt(item.itemQuantity);
       });
 
       const taxAmount = parseFloat(
@@ -128,6 +133,16 @@ const InvoiceForm = () => {
   const onItemizedItemEdit = (evt, id) => {
     const updatedItems = formData.items.map((oldItem) => {
       if (oldItem.itemId === id) {
+        if (evt.target.name === "itemId") {
+          const product = getOneProduct(evt.target.value);
+          return {
+            ...oldItem,
+            [evt.target.name]: evt.target.value,
+            itemName: product.name,
+            itemPrice: null,
+            itemCategory: product.category,
+          };
+        }
         return { ...oldItem, [evt.target.name]: evt.target.value };
       }
       return oldItem;
