@@ -66,12 +66,12 @@ const ProductRow = ({ product, navigate }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dispatch = useDispatch();
 
-	const handleDeleteClick = (invoiceId) => {
-		dispatch(deleteProduct(invoiceId));
+	const handleDeleteClick = (productId) => {
+		dispatch(deleteProduct(productId));
 	};
 
 	const handleEditClick = () => {
-		navigate(`/edit/${product.id}`);
+		navigate(`/products/edit/${product.id}`);
 	};
 
 	const openModal = (event) => {
@@ -83,15 +83,6 @@ const ProductRow = ({ product, navigate }) => {
 		setIsOpen(false);
 	};
 
-	// const [formData, setFormData] = useState({
-	// 	id: generateRandomId(),
-	// 	currentDate: new Date().toLocaleDateString(),
-	// 	productNumber: listSize + 1,
-	// 	productName: "",
-	// 	price: "",
-	// 	category: "",
-	// 	currency: "$",
-	// });
 
 	return (
 		<tr>

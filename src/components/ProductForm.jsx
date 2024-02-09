@@ -18,15 +18,19 @@ const ProductForm = () => {
 	const { getOneProduct, listSize } = useProductListData();
 
 
-	const [formData, setFormData] = useState({
-		id: generateRandomId(),
-		currentDate: new Date().toLocaleDateString(),
-		productNumber: listSize + 1,
-		productName: "",
-		price: "",
-		category: "",
-		currency: "$",
-	});
+	const [formData, setFormData] = useState(
+		isEdit
+			? getOneProduct(params.id)
+			:
+			{
+				id: generateRandomId(),
+				productNumber: listSize + 1,
+				productName: "",
+				price: "",
+				category: "",
+				currency: "$",
+			}
+	);
 
 	const editField = (e) => {
 		const { name, value } = e.target;
