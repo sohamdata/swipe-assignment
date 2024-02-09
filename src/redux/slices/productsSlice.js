@@ -12,7 +12,7 @@ const productsSlice = createSlice({
 		},
 		updateProduct: (state, action) => {
 			const index = state.findIndex(
-				(product) => product.id === action.payload.id,
+				(product) => product.id === parseInt(action.payload.id),
 			);
 			if (index !== -1) {
 				state[index] = action.payload.updatedProduct;
