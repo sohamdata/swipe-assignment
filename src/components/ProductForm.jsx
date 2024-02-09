@@ -50,7 +50,7 @@ const ProductForm = () => {
 			dispatch(addProduct(formData));
 			alert("Product added successfully 🥳");
 		}
-		navigate("/");
+		navigate("/products");
 	};
 
 	return (

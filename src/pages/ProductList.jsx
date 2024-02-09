@@ -3,7 +3,7 @@ import { Button, Card, Col, Row, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { BiSolidPencil, BiTrash } from "react-icons/bi";
 import { BsEyeFill } from "react-icons/bs";
-import InvoiceModal from "../components/InvoiceModal";
+import ProductModal from "../components/ProductModal";
 import { useNavigate } from "react-router-dom";
 import { useProductListData } from "../redux/hooks";
 import { useDispatch } from "react-redux";
@@ -93,59 +93,35 @@ const ProductRow = ({ product, navigate }) => {
 				{product.price}
 			</td>
 			<td className="fw-normal">{product.category}</td>
+
 			<td style={{ width: "5%" }}>
-				<Button variant="outline-primary" onClick={handleEditClick}>
-					<div className="d-flex align-items-center justify-content-center gap-2">
+				<div className="d-flex justify-content-between align-items-center gap-3">
+					<Button variant="outline-primary" onClick={handleEditClick}>
 						<BiSolidPencil />
-					</div>
-				</Button>
-			</td>
-			<td style={{ width: "5%" }}>
-				<Button variant="danger" onClick={() => handleDeleteClick(product.id)}>
-					<div className="d-flex align-items-center justify-content-center gap-2">
+					</Button>
+					<Button variant="danger" onClick={() => handleDeleteClick(product.id)}>
 						<BiTrash />
-					</div>
-				</Button>
-			</td>
-			<td style={{ width: "5%" }}>
-				<Button variant="secondary" onClick={openModal}>
-					<div className="d-flex align-items-center justify-content-center gap-2">
+					</Button>
+					<Button variant="secondary" onClick={openModal}>
 						<BsEyeFill />
-					</div>
-				</Button>
+					</Button>
+				</div>
 			</td>
-			{/* <InvoiceModal
+
+			<ProductModal
 				showModal={isOpen}
 				closeModal={closeModal}
 				info={{
 					isOpen,
-					id: invoice.id,
-					currency: invoice.currency,
-					currentDate: invoice.currentDate,
-					invoiceNumber: invoice.invoiceNumber,
-					dateOfIssue: invoice.dateOfIssue,
-					billTo: invoice.billTo,
-					billToEmail: invoice.billToEmail,
-					billToAddress: invoice.billToAddress,
-					billFrom: invoice.billFrom,
-					billFromEmail: invoice.billFromEmail,
-					billFromAddress: invoice.billFromAddress,
-					notes: invoice.notes,
-					total: invoice.total,
-					subTotal: invoice.subTotal,
-					taxRate: invoice.taxRate,
-					taxAmount: invoice.taxAmount,
-					discountRate: invoice.discountRate,
-					discountAmount: invoice.discountAmount,
+					id: product.id,
+					productNumber: product.productNumber,
+					productName: product.productName,
+					currency: product.currency,
+					price: product.price,
+					category: product.category,
 				}}
-				items={invoice.items}
-				currency={invoice.currency}
-				subTotal={invoice.subTotal}
-				taxAmount={invoice.taxAmount}
-				discountAmount={invoice.discountAmount}
-				total={invoice.total}
-			/> */}
-		</tr>
+			/>
+		</tr >
 	);
 };
 
