@@ -1,8 +1,9 @@
-import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Table from "react-bootstrap/Table";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
 import { BiTrash } from "react-icons/bi";
+import { useProductListData } from "../redux/hooks";
 import EditableField from "./EditableField";
 
 const InvoiceItem = (props) => {
@@ -42,6 +43,15 @@ const ItemRow = (props) => {
   const onDelEvent = () => {
     props.onDelEvent(props.item);
   };
+
+  const [productPrice, setProductPrice] = useState(props.item.itemPrice);
+  const { productList, getOneProduct } = useProductListData();
+  const product = props.item?.itemId ? getOneProduct(props.item.itemId) : null;
+
+  useEffect(() => {
+    setProductPrice(product?.price)
+  }, [props.item.itemId, product]);
+
   return (
     <tr>
       <td style={{ width: "100%" }}>
@@ -50,12 +60,20 @@ const ItemRow = (props) => {
             props.onItemizedItemEdit(evt, props.item.itemId)
           }
           cellData={{
-            type: "text",
-            name: "itemName",
-            placeholder: "Item name",
-            value: props.item.itemName,
+            type: "select",
+            name: "itemId",
+            placeholder: "Select an Item",
+            value: props.item.itemId,
             id: props.item.itemId,
           }}
+          items={[
+            { value: "", label: "Select an Item" },
+            ...productList.map((product) => ({
+              key: product.id,
+              value: product.id,
+              label: product.productName
+            })),
+          ]}
         />
         <EditableField
           onItemizedItemEdit={(evt) =>
@@ -98,7 +116,7 @@ const ItemRow = (props) => {
             step: "0.01",
             presicion: 2,
             textAlign: "text-end",
-            value: props.item.itemPrice,
+            value: productPrice,
             id: props.item.itemId,
           }}
         />

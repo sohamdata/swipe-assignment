@@ -16,20 +16,37 @@ const EditableField = (props) => {
           </span>
         </InputGroup.Text>
       )}
-      <Form.Control
-        className={props.cellData.textAlign}
-        type={props.cellData.type}
-        placeholder={props.cellData.placeholder}
-        min={props.cellData.min}
-        name={props.cellData.name}
-        id={props.cellData.id}
-        value={props.cellData.value}
-        step={props.cellData.step}
-        precision={props.cellData.precision}
-        aria-label={props.cellData.name}
-        onChange={props.onItemizedItemEdit}
-        required
-      />
+      {props.cellData.type === "select" ? (
+        <Form.Select
+          name={props.cellData.name}
+          id={props.cellData.id}
+          value={props.cellData.value || ""}
+          aria-label={props.cellData.name}
+          onChange={props.onItemizedItemEdit}
+          required
+        >
+          {props.items?.map((item, i) => (
+            <option key={String(item.value) + i} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Form.Select>
+      ) : (
+        <Form.Control
+          className={props.cellData.textAlign}
+          type={props.cellData.type}
+          placeholder={props.cellData.placeholder}
+          min={props.cellData.min}
+          name={props.cellData.name}
+          id={props.cellData.id}
+          value={props.cellData.value || ""}
+          step={props.cellData.step}
+          precision={props.cellData.precision}
+          aria-label={props.cellData.name}
+          onChange={props.onItemizedItemEdit}
+          required
+        />
+      )}
     </InputGroup>
   );
 };

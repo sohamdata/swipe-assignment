@@ -17,7 +17,6 @@ const ProductForm = () => {
 
 	const { getOneProduct, listSize } = useProductListData();
 
-
 	const [formData, setFormData] = useState(
 		isEdit
 			? getOneProduct(params.id)
@@ -68,13 +67,14 @@ const ProductForm = () => {
 				<Form onSubmit={handleSubmit}>
 					<Row className="mb-3">
 						<Form.Group as={Col} sm="6" controlId="productNumber">
-							<Form.Label className="fw-bold">Product ID:</Form.Label>
+							<Form.Label className="fw-bold">Product Number:</Form.Label>
 							<Form.Control
-								type="text"
-								placeholder="Enter product ID"
+								type="number"
+								placeholder="Enter product number"
 								name="productNumber"
 								value={formData.productNumber}
 								onChange={editField}
+								min="1"
 								required
 							/>
 						</Form.Group>
@@ -94,11 +94,12 @@ const ProductForm = () => {
 						<Form.Group as={Col} sm="6" controlId="price">
 							<Form.Label className="fw-bold">Price:</Form.Label>
 							<Form.Control
-								type="text"
+								type="number"
 								placeholder="Enter price"
 								name="price"
 								value={formData.price}
 								onChange={editField}
+								min="1"
 								required
 							/>
 						</Form.Group>
