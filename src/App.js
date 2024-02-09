@@ -6,6 +6,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Invoice from "./pages/Invoice";
 import InvoiceList from "./pages/InvoiceList";
+import Product from "./pages/Product";
 import ProductList from "./pages/ProductList";
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/create/:id" element={<Invoice />} />
             <Route path="/edit/:id" element={<Invoice />} />
             <Route path="/products" element={<ProductList />} />
+            <Route path="/products/create" element={<Product />} />
           </Routes>
         </Container>
       </div>

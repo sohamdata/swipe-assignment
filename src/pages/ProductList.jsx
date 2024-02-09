@@ -5,23 +5,14 @@ import { BiSolidPencil, BiTrash } from "react-icons/bi";
 import { BsEyeFill } from "react-icons/bs";
 import InvoiceModal from "../components/InvoiceModal";
 import { useNavigate } from "react-router-dom";
-import { useInvoiceListData } from "../redux/hooks";
+import { useProductListData } from "../redux/hooks";
 import { useDispatch } from "react-redux";
-import { deleteInvoice } from "../redux/slices/invoicesSlice";
+import { deleteProduct } from "../redux/slices/productsSlice";
 
 const ProductList = () => {
-	const { invoiceList, getOneInvoice } = useInvoiceListData();
-	const isListEmpty = invoiceList.length === 0;
-	const [copyId, setCopyId] = useState("");
+	const { productList, getOneProduct } = useProductListData();
+	const isListEmpty = productList.length === 0;
 	const navigate = useNavigate();
-	const handleCopyClick = () => {
-		const invoice = getOneInvoice(copyId);
-		if (!invoice) {
-			alert("Please enter the valid invoice id.");
-		} else {
-			navigate(`/create/${copyId}`);
-		}
-	};
 
 	return (
 		<Row>
@@ -31,50 +22,33 @@ const ProductList = () => {
 					{isListEmpty ? (
 						<div className="d-flex flex-column align-items-center">
 							<h3 className="fw-bold pb-2 pb-md-4">No products present</h3>
-							<Link to="/create">
+							<Link to="/products/create">
 								<Button variant="primary">Create Product</Button>
 							</Link>
 						</div>
 					) : (
 						<div className="d-flex flex-column">
 							<div className="d-flex flex-row align-items-center justify-content-between">
-								<h3 className="fw-bold pb-2 pb-md-4">Invoice List</h3>
-								<Link to="/create">
-									<Button variant="primary mb-2 mb-md-4">Create Invoice</Button>
+								<h3 className="fw-bold pb-2 pb-md-4">Products List</h3>
+								<Link to="/products/create">
+									<Button variant="primary mb-2 mb-md-4">Create Product</Button>
 								</Link>
-
-								<div className="d-flex gap-2">
-									<Button variant="dark mb-2 mb-md-4" onClick={handleCopyClick}>
-										Copy Invoice
-									</Button>
-
-									<input
-										type="text"
-										value={copyId}
-										onChange={(e) => setCopyId(e.target.value)}
-										placeholder="Enter Invoice ID to copy"
-										className="bg-white border"
-										style={{
-											height: "50px",
-										}}
-									/>
-								</div>
 							</div>
 							<Table responsive>
 								<thead>
 									<tr>
-										<th>Invoice No.</th>
-										<th>Bill To</th>
-										<th>Due Date</th>
-										<th>Total Amt.</th>
+										<th>Product No.</th>
+										<th>Name</th>
+										<th>Price</th>
+										<th>Catogory</th>
 										<th>Actions</th>
 									</tr>
 								</thead>
 								<tbody>
-									{invoiceList.map((invoice) => (
-										<InvoiceRow
-											key={invoice.id}
-											invoice={invoice}
+									{productList.map((product) => (
+										<ProductRow
+											key={product.id}
+											product={product}
 											navigate={navigate}
 										/>
 									))}
@@ -88,16 +62,16 @@ const ProductList = () => {
 	);
 };
 
-const InvoiceRow = ({ invoice, navigate }) => {
+const ProductRow = ({ product, navigate }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dispatch = useDispatch();
 
 	const handleDeleteClick = (invoiceId) => {
-		dispatch(deleteInvoice(invoiceId));
+		dispatch(deleteProduct(invoiceId));
 	};
 
 	const handleEditClick = () => {
-		navigate(`/edit/${invoice.id}`);
+		navigate(`/edit/${product.id}`);
 	};
 
 	const openModal = (event) => {
@@ -109,15 +83,25 @@ const InvoiceRow = ({ invoice, navigate }) => {
 		setIsOpen(false);
 	};
 
+	// const [formData, setFormData] = useState({
+	// 	id: generateRandomId(),
+	// 	currentDate: new Date().toLocaleDateString(),
+	// 	productNumber: listSize + 1,
+	// 	productName: "",
+	// 	price: "",
+	// 	category: "",
+	// 	currency: "$",
+	// });
+
 	return (
 		<tr>
-			<td>{invoice.invoiceNumber}</td>
-			<td className="fw-normal">{invoice.billTo}</td>
-			<td className="fw-normal">{invoice.dateOfIssue}</td>
+			<td>{product.productNumber}</td>
+			<td className="fw-normal">{product.productName}</td>
 			<td className="fw-normal">
-				{invoice.currency}
-				{invoice.total}
+				{product.currency}
+				{product.price}
 			</td>
+			<td className="fw-normal">{product.category}</td>
 			<td style={{ width: "5%" }}>
 				<Button variant="outline-primary" onClick={handleEditClick}>
 					<div className="d-flex align-items-center justify-content-center gap-2">
@@ -126,7 +110,7 @@ const InvoiceRow = ({ invoice, navigate }) => {
 				</Button>
 			</td>
 			<td style={{ width: "5%" }}>
-				<Button variant="danger" onClick={() => handleDeleteClick(invoice.id)}>
+				<Button variant="danger" onClick={() => handleDeleteClick(product.id)}>
 					<div className="d-flex align-items-center justify-content-center gap-2">
 						<BiTrash />
 					</div>
@@ -139,7 +123,7 @@ const InvoiceRow = ({ invoice, navigate }) => {
 					</div>
 				</Button>
 			</td>
-			<InvoiceModal
+			{/* <InvoiceModal
 				showModal={isOpen}
 				closeModal={closeModal}
 				info={{
@@ -169,7 +153,7 @@ const InvoiceRow = ({ invoice, navigate }) => {
 				taxAmount={invoice.taxAmount}
 				discountAmount={invoice.discountAmount}
 				total={invoice.total}
-			/>
+			/> */}
 		</tr>
 	);
 };
