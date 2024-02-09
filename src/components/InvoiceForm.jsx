@@ -10,7 +10,7 @@ import InvoiceModal from "./InvoiceModal";
 import { BiArrowBack } from "react-icons/bi";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch } from "react-redux";
-import { addInvoice, updateInvoice } from "../redux/invoicesSlice";
+import { addInvoice, updateInvoice } from "../redux/slices/invoicesSlice";
 import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import generateRandomId from "../utils/generateRandomId";
 import { useInvoiceListData } from "../redux/hooks";
@@ -30,12 +30,12 @@ const InvoiceForm = () => {
     isEdit
       ? getOneInvoice(params.id)
       : isCopy && params.id
-      ? {
+        ? {
           ...getOneInvoice(params.id),
           id: generateRandomId(),
           invoiceNumber: listSize + 1,
         }
-      : {
+        : {
           id: generateRandomId(),
           currentDate: new Date().toLocaleDateString(),
           invoiceNumber: listSize + 1,

@@ -7,7 +7,7 @@ import InvoiceModal from "../components/InvoiceModal";
 import { useNavigate } from "react-router-dom";
 import { useInvoiceListData } from "../redux/hooks";
 import { useDispatch } from "react-redux";
-import { deleteInvoice } from "../redux/invoicesSlice";
+import { deleteInvoice } from "../redux/slices/invoicesSlice";
 
 const InvoiceList = () => {
   const { invoiceList, getOneInvoice } = useInvoiceListData();
