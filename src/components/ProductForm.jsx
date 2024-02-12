@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useProductListData } from "../redux/hooks";
 import { addProduct, updateProduct } from "../redux/slices/productsSlice";
+import { updateInvoiceOnProductUpdate } from "../redux/slices/invoicesSlice";
 import generateRandomId from "../utils/generateRandomId";
 
 
@@ -44,6 +45,7 @@ const ProductForm = () => {
 		e.preventDefault();
 		if (isEdit) {
 			dispatch(updateProduct({ id: params.id, updatedProduct: formData }));
+			dispatch(updateInvoiceOnProductUpdate({ productId: params.id, newPrice: formData.price }));
 			alert("Product updated successfully 🥳");
 		} else {
 			dispatch(addProduct(formData));
