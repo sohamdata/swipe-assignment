@@ -89,6 +89,8 @@ const InvoiceList = () => {
 };
 
 const InvoiceRow = ({ invoice, navigate }) => {
+  console.log(invoice);
+
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 

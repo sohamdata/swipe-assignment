@@ -5,6 +5,7 @@ import Table from "react-bootstrap/Table";
 import { BiTrash } from "react-icons/bi";
 import { useProductListData } from "../redux/hooks";
 import EditableField from "./EditableField";
+import getAbsCurrency from "../utils/getAbsCurrency";
 
 const InvoiceItem = (props) => {
   const { onItemizedItemEdit, currency, onRowDel, items, onRowAdd } = props;
@@ -49,8 +50,8 @@ const ItemRow = (props) => {
   const product = props.item?.itemId ? getOneProduct(props.item.itemId) : null;
 
   useEffect(() => {
-    setProductPrice(product?.price)
-  }, [props.item.itemId, product]);
+    setProductPrice(getAbsCurrency(product?.price, product?.currency, props.currency));
+  }, [props.currency, props.item.itemId, product]);
 
   return (
     <tr>

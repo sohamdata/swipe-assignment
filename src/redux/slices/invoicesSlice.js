@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import getAbsCurrency from "../../utils/getAbsCurrency";
 
 const invoicesSlice = createSlice({
   name: "invoices",
@@ -19,11 +20,13 @@ const invoicesSlice = createSlice({
       }
     },
     updateInvoiceOnProductUpdate: (state, action) => {
-      const { productId, newPrice } = action.payload;
+      const { productId, priceDiff, newPrice } = action.payload;
       state.forEach((invoice) => {
-        const item = invoice?.items.find((item) => item.itemId === productId);
+        const item = invoice?.items.find((product) => product.itemId === productId);
         if (item) {
-          invoice.total = invoice.total - item.price + newPrice;
+          invoice.total = String(
+            (parseFloat(invoice.total) + getAbsCurrency(parseFloat(priceDiff), newPrice, invoice.currency)).toFixed(2),
+          );
         }
       });
     },

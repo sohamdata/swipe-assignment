@@ -7,6 +7,7 @@ import { useProductListData } from "../redux/hooks";
 import { addProduct, updateProduct } from "../redux/slices/productsSlice";
 import { updateInvoiceOnProductUpdate } from "../redux/slices/invoicesSlice";
 import generateRandomId from "../utils/generateRandomId";
+import getAbsCurrency from "../utils/getAbsCurrency";
 
 
 const ProductForm = () => {
@@ -43,15 +44,33 @@ const ProductForm = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (isEdit) {
-			dispatch(updateProduct({ id: params.id, updatedProduct: formData }));
-			dispatch(updateInvoiceOnProductUpdate({ productId: params.id, newPrice: formData.price }));
-			alert("Product updated successfully 🥳");
-		} else {
-			dispatch(addProduct(formData));
-			alert("Product added successfully 🥳");
+
+		if (!formData.productName || !formData.price || !formData.category) {
+			alert("Please fill in all fields");
+			return;
 		}
-		navigate("/products");
+
+		if (formData.price < 1) {
+			alert("Price cannot be less than 1");
+			return;
+		}
+
+		try {
+			if (isEdit) {
+				const { id } = params;
+				const currProduct = getOneProduct(id);
+				const priceDiff = formData.price - getAbsCurrency(parseFloat(currProduct.price), currProduct.currency, formData.currency);
+				dispatch(updateProduct({ id, updatedProduct: formData }));
+				dispatch(updateInvoiceOnProductUpdate({ productId: id, priceDiff, newPrice: formData.currency }));
+				alert("Product updated successfully 🥳");
+			} else {
+				dispatch(addProduct(formData));
+				alert("Product added successfully 🥳");
+			}
+			navigate("/products");
+		} catch (error) {
+			alert("An error occurred, please try again");
+		}
 	};
 
 	return (

@@ -14,6 +14,7 @@ import { addInvoice, updateInvoice } from "../redux/slices/invoicesSlice";
 import generateRandomId from "../utils/generateRandomId";
 import InvoiceItem from "./InvoiceItem";
 import InvoiceModal from "./InvoiceModal";
+import getAbsCurrency from "../utils/getAbsCurrency";
 
 const InvoiceForm = () => {
   const dispatch = useDispatch();
@@ -102,8 +103,8 @@ const InvoiceForm = () => {
       prevFormData.items.forEach((item) => {
         let price = item.itemPrice;
         if (!price) {
-          const prod = getOneProduct(item.itemId);
-          price = prod.price
+          const product = getOneProduct(item.itemId);
+          price = getAbsCurrency(product.price, product.currency, formData.currency);
         }
         subTotal += parseFloat(price || 0).toFixed(2) * parseInt(item.itemQuantity);
       });
