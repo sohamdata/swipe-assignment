@@ -119,6 +119,7 @@ const ItemRow = (props) => {
             textAlign: "text-end",
             value: productPrice,
             id: props.item.itemId,
+            disabled: true,
           }}
         />
       </td>
