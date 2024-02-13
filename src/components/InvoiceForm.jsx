@@ -72,7 +72,7 @@ const InvoiceForm = () => {
 
   useEffect(() => {
     handleCalculateTotal();
-  }, []);
+  }, [formData.items]);
 
   const handleRowDel = (itemToDelete) => {
     const updatedItems = formData.items.filter((item) => item.itemId !== itemToDelete.itemId);
@@ -102,7 +102,7 @@ const InvoiceForm = () => {
 
       prevFormData.items.forEach((item) => {
         let price = item.itemPrice;
-        if (!price) {
+        if (price === null || price === undefined) {
           const product = getOneProduct(item.itemId);
           price = getAbsCurrency(product.price, product.currency, formData.currency);
         }

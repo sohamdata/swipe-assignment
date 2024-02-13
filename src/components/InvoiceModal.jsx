@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useProductListData } from "../redux/hooks";
 
 const GenerateInvoice = () => {
   html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
@@ -27,6 +28,9 @@ const GenerateInvoice = () => {
 };
 
 const InvoiceModal = (props) => {
+  const { currency } = props;
+  const { getOneProduct } = useProductListData();
+
   return (
     <div>
       <Modal
@@ -52,7 +56,7 @@ const InvoiceModal = (props) => {
               <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:</h6>
               <h5 className="fw-bold text-secondary">
                 {" "}
-                {props.currency} {props.total}
+                {currency} {props.total}
               </h5>
             </div>
           </div>
@@ -86,17 +90,20 @@ const InvoiceModal = (props) => {
               </thead>
               <tbody>
                 {props.items.map((item, i) => {
+                  const product = getOneProduct(item.itemId);
+                  const itemPrice = product ? product.price : 0;
+                  const totalPrice = itemPrice * item.itemQuantity;
                   return (
                     <tr id={i} key={i}>
                       <td style={{ width: "70px" }}>{item.itemQuantity}</td>
                       <td>
-                        {item.itemName} - {item.itemDescription}
+                        {product.productName} - {item.itemDescription}
                       </td>
                       <td className="text-end" style={{ width: "100px" }}>
-                        {props.currency} {item.itemPrice}
+                        {currency} {itemPrice}
                       </td>
                       <td className="text-end" style={{ width: "100px" }}>
-                        {props.currency} {item.itemPrice * item.itemQuantity}
+                        {currency} {totalPrice}
                       </td>
                     </tr>
                   );
@@ -116,17 +123,17 @@ const InvoiceModal = (props) => {
                     TAX
                   </td>
                   <td className="text-end" style={{ width: "100px" }}>
-                    {props.currency} {props.taxAmmount}
+                    {currency} {props.taxAmount}
                   </td>
                 </tr>
-                {props.discountAmmount !== 0.0 && (
+                {props.discountAmount !== 0.0 && (
                   <tr className="text-end">
                     <td></td>
                     <td className="fw-bold" style={{ width: "100px" }}>
                       DISCOUNT
                     </td>
                     <td className="text-end" style={{ width: "100px" }}>
-                      {props.currency} {props.discountAmmount}
+                      {currency} {props.discountAmount}
                     </td>
                   </tr>
                 )}
@@ -136,7 +143,7 @@ const InvoiceModal = (props) => {
                     TOTAL
                   </td>
                   <td className="text-end" style={{ width: "100px" }}>
-                    {props.currency} {props.total}
+                    {currency} {props.total}
                   </td>
                 </tr>
               </tbody>
