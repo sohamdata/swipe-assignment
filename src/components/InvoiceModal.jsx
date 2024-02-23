@@ -29,6 +29,8 @@ const GenerateInvoice = () => {
 
 const InvoiceModal = (props) => {
   const { currency } = props;
+  console.log(props);
+
   const { getOneProduct } = useProductListData();
 
   return (
@@ -97,7 +99,7 @@ const InvoiceModal = (props) => {
                     <tr id={i} key={i}>
                       <td style={{ width: "70px" }}>{item.itemQuantity}</td>
                       <td>
-                        {product.productName} - {item.itemDescription}
+                        {product?.productName || item.itemName} - {item.itemDescription}
                       </td>
                       <td className="text-end" style={{ width: "100px" }}>
                         {currency} {itemPrice}
