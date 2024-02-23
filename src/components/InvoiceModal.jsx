@@ -29,7 +29,6 @@ const GenerateInvoice = () => {
 
 const InvoiceModal = (props) => {
   const { currency } = props;
-  console.log(props);
 
   const { getOneProduct } = useProductListData();
 
